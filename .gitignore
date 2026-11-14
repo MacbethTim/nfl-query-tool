@@ -1,0 +1,63 @@
+# --- Secrets (never commit; see docs/decisions.md D11) ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.python-version
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.ipynb_checkpoints/
+
+# --- Pulumi (stack config files Pulumi.<stack>.yaml ARE committed; secrets in them are encrypted) ---
+.pulumi/
+
+# --- Airflow ---
+airflow.db
+airflow.cfg
+airflow-webserver.pid
+standalone_admin_password.txt
+logs/
+pipeline/logs/
+
+# --- Data (pulled by the pipeline from nflverse, never committed) ---
+data/
+*.parquet
+*.rds
+*.duckdb
+
+# --- Database dumps and backups ---
+*.dump
+*.sql.gz
+backups/
+
+# --- Docker ---
+docker-compose.override.yml
+
+# --- Editors and OS ---
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Claude Code local settings ---
+.claude/settings.local.json
