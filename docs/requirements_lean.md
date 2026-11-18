@@ -73,11 +73,11 @@ Verify: run `pulumi destroy`, confirm no billable resources remain except the ba
 **C1 — Hosted on AWS, on Linux that I administer from the command line.**
 Why: AWS is what my employer uses and what shows up in job postings; Linux operations are a named skill gap.
 
-**C2 — AWS spend stays under $35/month, all-in. The domain is billed separately.**
+**C2 — AWS spend stays under \$35/month, all-in. The domain is billed separately.**
 Why: it's a personal project; the ceiling sizes the system to the problem, and on-demand pricing avoids committing to an instance size before the skeleton proves it.
 
-**C3 — Non-AWS services add no more than $15/month to this project; free tiers are the default.**
-Why: total cost stays near $50/month, and a small paid tool is acceptable when it's clearly the better option.
+**C3 — Non-AWS services add no more than \$15/month to this project; free tiers are the default.**
+Why: total cost stays near \$50/month, and a small paid tool is acceptable when it's clearly the better option.
 
 **C4 — In phase 1, all data comes from nflverse.**
 Why: it's free, covers 1999 onward, and updates nightly. A paid feed would blow the cost ceilings, and scraping is fragile.
@@ -122,7 +122,7 @@ Why: it makes the translation repeatable, and it shows repo readers how I direct
 Why: the repo is public, and C2/C3 cap paid services but not paid or proprietary software.
 
 
-## 6. Success criteria (how you'll know phase 1 is done)
+## 6. Success criteria
 ## 7. Out of scope / Phase 2
 - Availability/uptime targets — single user; downtime is acceptable (freshness and recovery are covered by Q1–Q2).
 - My ETL framework — built in a separate project. Phase 1 transformations start as plain Python and move onto the framework once it exists.
