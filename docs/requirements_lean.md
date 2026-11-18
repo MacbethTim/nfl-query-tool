@@ -31,7 +31,7 @@ Verify: from my laptop, outside the cloud network, I connect with a standard cli
 **R6 — I can create my own views and tables in a personal workspace without being able to change modeled data. They keep working through refreshes and non-breaking rebuilds. When a model change breaks one, it is never silently lost: I'm told which objects were affected and can recover their definitions.**
 Verify: a write to a modeled table from my login is rejected; a workspace view survives a routine refresh and a full reload; after a model change that drops a column the view uses, I'm notified that the view is affected and can retrieve its original definition.
 
-**R7 — A workspace view can be promoted into the modeled layer, after which the pipeline maintains it.**
+**R7 — A workspace view can be promoted into the modeled layer, after which the pipeline maintains it. A promoted view can later be rebuilt as a Python pipeline that produces a table, when warranted.**
 Verify: a promoted view exists in the modeled layer, is defined in the repo, and is rebuilt by a refresh.
 
 **R8 — I can query when the data was last refreshed, what date it covers, and whether the most recent refresh succeeded.**
@@ -64,11 +64,71 @@ Verify: a connection attempt without valid credentials is refused, and so is an 
 **Q8 — If the server or its disk is lost, my workspace objects, change history (R3), and load state can be restored with no more than 24 hours of changes lost.**
 Verify: restore the most recent backup onto a fresh server, then confirm workspace objects, change history, and load state match their state as of that backup, the backup is less than 24 hours old, and a refresh afterward catches up per Q2.
 
+**Q9 — The entire system can be torn down and rebuilt from the repo and the latest backup, with no manual steps beyond running the provisioning and deploy commands.**
+Verify: run `pulumi destroy`, confirm no billable resources remain except the backup storage, then rebuild from a clean checkout; confirm workspace objects, change history, and load state match the last backup, I can connect per R5, and the next refresh catches up per Q2.
 
-## 5. Constraints      (C1… — fixed tools/cost/rules + one-line reason)
+
+## 5. Constraints
+
+**C1 — Hosted on AWS, on Linux that I administer from the command line.**
+Why: AWS is what my employer uses and what shows up in job postings; Linux operations are a named skill gap.
+
+**C2 — AWS spend stays under $35/month, all-in. The domain is billed separately.**
+Why: it's a personal project; the ceiling sizes the system to the problem, and on-demand pricing avoids committing to an instance size before the skeleton proves it.
+
+**C3 — Non-AWS services add no more than $15/month to this project; free tiers are the default.**
+Why: total cost stays near $50/month, and a small paid tool is acceptable when it's clearly the better option.
+
+**C4 — In phase 1, all data comes from nflverse.**
+Why: it's free, covers 1999 onward, and updates nightly. A paid feed would blow the cost ceilings, and scraping is fragile.
+
+**C5 — Airflow orchestrates all scheduled work on the server.**
+Why: it's the long-standing industry standard for orchestration.
+
+**C6 — All of this project's cloud resources are provisioned with Pulumi in Python; nothing is created by hand in the console.**
+Why: infrastructure stays reproducible (Q9) and in the same language as the rest of the codebase.
+
+**C7 — Source-to-target pipelines are Python; derived data (views over modeled tables) is SQL.**
+Why: I need to read, run, and debug everything agents write; pipelines will move onto my own ETL framework (separate project) once it exists.
+
+**C8 — The repo is public on GitHub.**
+Why: it's a portfolio piece.
+
+**C9 — Raw nflverse data is never committed to the repo, and the README credits nflverse per its CC-BY 4.0 license.**
+Why: attribution is a license requirement, and the underlying NFL data remains subject to its owners' terms, so the repo holds code, not data.
+
+**C10 — No agent works on anything without a spec and a bounded task whose acceptance criteria trace to an R or Q. Agents never provision or change cloud resources without my approval.**
+Why: practicing the requirements → specs → tasks → agents workflow is half the point of the project, and I stay the gate on anything that costs money or touches production.
+
+**C11 — Agents run on my Claude subscription; nothing in the system calls a paid LLM API.**
+Why: usage-based pricing has no ceiling; the subscription is a fixed cost.
+
+**C12 — The database is PostgreSQL.**
+Why: it's the open-source industry standard, and operating it is a transferable skill.
+
+**C13 — Every service runs in a Docker container.**
+Why: containers are the standard unit of deployment, and the same images run on my laptop and in the cloud.
+
+**C14 — Development and agent work happen locally or in an ephemeral dev stack built from the same Pulumi code as production and destroyed when testing ends; never against production. Agents may read production only through a dedicated read-only login.**
+Why: mistakes stay off the live database and cost little; Q9 makes a short-lived cloud copy cheap when local isn't enough.
+
+**C15 — Tasks are tracked in ClickUp; each task links to its spec and the R or Q it serves.**
+Why: ClickUp is what I use at work, so this sharpens a skill I use daily.
+
+**C16 — Requirements are translated into specs and tasks by a Claude skill kept in the repo.**
+Why: it makes the translation repeatable, and it shows repo readers how I direct AI work, not just the code it produced.
+
+**C17 — Every software dependency (libraries, packages, container images) is free and open source (OSI-approved license).**
+Why: the repo is public, and C2/C3 cap paid services but not paid or proprietary software.
+
+
 ## 6. Success criteria (how you'll know phase 1 is done)
 ## 7. Out of scope / Phase 2
+- Availability/uptime targets — single user; downtime is acceptable (freshness and recovery are covered by Q1–Q2).
+- My ETL framework — built in a separate project. Phase 1 transformations start as plain Python and move onto the framework once it exists.
+
 ## 8. Open questions
+- Should workspace object definitions (R6) be saved to the repo automatically, as a safety net beyond Q8 backups and a record of exploration?
 
 ## Appendix A. Benchmark questions
 <!-- 5–8 questions spanning grains: player-season, play-level, career, game-level -->
