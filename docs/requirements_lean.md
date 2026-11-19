@@ -123,6 +123,18 @@ Why: the repo is public, and C2/C3 cap paid services but not paid or proprietary
 
 
 ## 6. Success criteria
+
+**S1 — Phase 1 is done when every R and Q passes its Verify step against production, and I run the checks myself. The only exceptions are failures caused by things outside the project's control, such as upstream data issues, each listed under Exceptions with a linked task.**
+
+**S2 — The modeled layer doesn't lose what the source data can answer.**
+After the build, I explore freely with SQL against the modeled tables and record every question I try. If SQL can't answer a question, I try it in pandas against nflverse directly. If pandas answers it, it's a model gap; if not, it's logged as a roadmap item. Phase 1 succeeds when, out of at least 10 questions the source data can answer, no more than 2 are model gaps. If S2 fails, each model gap becomes a task; after the fixes, S2 is rerun with new questions.
+
+**S3 — The agent workflow held up.**
+Every merged change traces to a ClickUp task, a spec and an R or Q. I record the first-review pass rate for all agent tasks as a baseline for future phases. It measures the whole workflow, from requirement to merged code, not just the agent. A task passes if its PR is approved with no "Request changes" reviews and no commits after my first review. A later task that fixes its work marks it failed, and the reason is noted on the original task.
+
+### Exceptions
+<!-- Each entry: the R/Q it applies to; what fails and why it's acceptable for now; link to the ClickUp task that fixes it. -->
+
 ## 7. Out of scope / Phase 2
 - Availability/uptime targets — single user; downtime is acceptable (freshness and recovery are covered by Q1–Q2).
 - My ETL framework — built in a separate project. Phase 1 transformations start as plain Python and move onto the framework once it exists.
@@ -132,3 +144,9 @@ Why: the repo is public, and C2/C3 cap paid services but not paid or proprietary
 
 ## Appendix A. Benchmark questions
 <!-- 5–8 questions spanning grains: player-season, play-level, career, game-level -->
+
+## Infrastructure notes (temporary — move to the new decisions.md, then delete)
+- Connect by hostname (e.g. `db.timfox.dev`); Pulumi updates the Cloudflare record on each rebuild (Q9).
+- Postgres TLS uses `sslmode=require` (encryption without hostname verification; meets Q7).
+- After a rebuild, clear the old SSH host key from `known_hosts`.
+- Backups stay in S3. The bucket is `retain_on_delete` so `pulumi destroy` completes and leaves it in place (Q9); never set `force_destroy` on it.
