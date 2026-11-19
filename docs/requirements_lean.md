@@ -6,9 +6,18 @@ The purpose of this project is to gain hands-on skill using indusrty standard to
 
 This initial phase - a database hosted in the cloud - is meant to be simple so that I can learn the fundamentals of deploying analytics resources in the could, AI-driven development, and the foundations of AI Engineering.
 
-## 2. Users & use      (who queries, how, typical questions)
+## 2. Users & use
 
-I am the primary user of this product. Phase 1 will enable me to write SQL queries against this data for exploratory purposes. This phase will allow me to ask question and write the corresponding to retrieve the required data to answer my questions.
+**Who:** Me, as the only human user. Agents also read production, but only through a read-only login (C14).
+
+**How:** Exploratory, ad hoc SQL from a standard client on my laptop (R5), against the modeled tables. I save my own views in a personal workspace (R6) and promote the ones worth keeping (R7). The questions are after-the-fact analysis, not live game tracking.
+
+**Typical questions:**
+- <player-season: e.g. Caleb Williams' completion % and yards/attempt by season>
+- <game/situational: e.g. Bears 4th-down attempts and conversion rate, 2024>
+- <career/leaderboard: e.g. top 10 career receiving yards, 1999–present>
+
+**Looking ahead:** In phase 2, Claude queries the modeled layer through an MCP server. Phase 1 table and column design should assume a second reader that can't guess at meaning.
 
 
 ## 3. Functional
