@@ -46,6 +46,8 @@ Verify: a promoted view exists in the modeled layer, is defined in the repo, and
 **R8 — I can query when the data was last refreshed, what date it covers, and whether the most recent refresh succeeded.**
 Verify: after a successful refresh, a query returns its timestamp and covered date; after a forced failure, the same query shows the failure and still reports the last successful refresh.
 
+**R9 — Every modeled table and column is documented, and I can read the documentation by querying the database. Tables state their purpose, grain, and keys; columns state their meaning and units.**
+Verify: a catalog query returns no modeled table or column without a description, including promoted views (R7); a change that adds an undocumented modeled object fails CI.
 
 ## 4. Quality
 
@@ -159,6 +161,7 @@ Every merged change traces to a ClickUp task, a spec and an R or Q. I record the
 
 ## 8. Open questions
 - Should workspace object definitions (R6) be saved to the repo automatically, as a safety net beyond Q8 backups and a record of exploration?
+  - Resolved: no. R6 definition history + Q8 backups + R7 promotion suffice.
 
 ## Appendix A. Benchmark questions
 <!-- Regular season only unless stated. Reference = where the trusted answer comes from; fill in the expected value once checked. -->
