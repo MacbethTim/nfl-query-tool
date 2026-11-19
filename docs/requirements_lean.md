@@ -2,9 +2,9 @@
  ---
 ## 1. Purpose
 
-The purpose of this project is to gain hands-on skill using indusrty standard tools in analytics engineering in a cloud environment. With the paradigm shift towards ai-driven development, it is imperative to have the proper guardrails in place to ensure that agents adhere to the intended motivations behind requirements and design considerations. This project is not just about "how to build a DAG in airflow" or "how to deploy an EC2 instance in AWS", but how to get agents to reliably complete this work that results in a functional product.
+The purpose of this project is to gain hands-on skill with industry-standard analytics engineering tools in a cloud environment. With the shift toward AI-driven development, guardrails are needed so that agents follow the intent behind requirements and design decisions. This project is not just about "how to build a DAG in Airflow" or "how to deploy an EC2 instance in AWS", but how to get agents to reliably complete that work and produce a functional product.
 
-This initial phase - a database hosted in the cloud - is meant to be simple so that I can learn the fundamentals of deploying analytics resources in the could, AI-driven development, and the foundations of AI Engineering.
+Phase 1 delivers a cloud-hosted database of nflverse data with a modeled layer I query with SQL. It is deliberately simple so I can learn the fundamentals of deploying analytics resources in the cloud, AI-driven development, and the foundations of AI engineering.
 
 ## 2. Users & use
 
@@ -145,14 +145,34 @@ Every merged change traces to a ClickUp task, a spec and an R or Q. I record the
 <!-- Each entry: the R/Q it applies to; what fails and why it's acceptable for now; link to the ClickUp task that fixes it. -->
 
 ## 7. Out of scope / Phase 2
-- Availability/uptime targets — single user; downtime is acceptable (freshness and recovery are covered by Q1–Q2).
-- My ETL framework — built in a separate project. Phase 1 transformations start as plain Python and move onto the framework once it exists.
+- Advanced metrics (EPA, WPA, CPOE) and betting lines: loaded raw, not modeled.
+- nflverse datasets beyond R1's four (NGS, snaps, depth charts, injuries, contracts, draft, combine, FTN).
+- Preseason games; pre-1999 data.
+- MCP server, natural-language querying, glossary, feedback queue (phase 2).
+- Dashboards, BI tools, UI, API; access is SQL only.
+- Fantasy scoring.
+- Automated reconciliation against PFR.
+- Other users or demo access.
+- Availability targets: downtime is acceptable (freshness/recovery covered by Q1–Q2).
+- Query performance targets.
+- My ETL framework: separate project; pipelines move onto it once it exists.
 
 ## 8. Open questions
 - Should workspace object definitions (R6) be saved to the repo automatically, as a safety net beyond Q8 backups and a record of exploration?
 
 ## Appendix A. Benchmark questions
-<!-- 5–8 questions spanning grains: player-season, play-level, career, game-level -->
+<!-- Regular season only unless stated. Reference = where the trusted answer comes from; fill in the expected value once checked. -->
+
+| # | Question | Grain | What it tests | Reference |
+|---|---|---|---|---|
+| A1 | Caleb Williams' 2024 passing line: completions, attempts, yards, TD, INT, times sacked | Player-season | Player identity; sacks kept separate from pass attempts and passing yards | PFR player page |
+| A2 | Christian McCaffrey's 2022 rushing yards, total and split by team (CAR, SF) | Player-team-season | Mid-season trade; totals across teams | PFR player page |
+| A3 | Top 10 career receiving yards, counting only games from 1999 on | Career | Career aggregation; the 1999 cutoff truncates earlier careers | pandas against nflverse player stats |
+| A4 | Rams franchise wins by season, 1999–present | Team-season | Franchise vs. team code across relocation (STL → LA) | PFR franchise page |
+| A5 | Super Bowl LIX: final score, total yards and turnovers for each team | Game | Postseason games; team totals reconcile with play-by-play | PFR box score |
+| A6 | Bears 2024 4th-down attempts (went for it) and conversions | Play, situational | Play classification; plays nullified by penalty excluded | PFR team page (4th-down stats) |
+| A7 | Longest rushing play of 2023: player, game, yards | Play | Play-level grain; play-to-game and play-to-player joins | PFR season leaders |
+| A8 | Tied regular-season games per season, 1999–present | Game, by season | Ties in records and results | PFR season pages |
 
 ## Infrastructure notes (temporary — move to the new decisions.md, then delete)
 - Connect by hostname (e.g. `db.timfox.dev`); Pulumi updates the Cloudflare record on each rebuild (Q9).
